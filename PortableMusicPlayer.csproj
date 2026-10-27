@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName Condition="'$(Loader)' == 'BepInEx5'">PortableMusicPlayer.BepInEx5</AssemblyName>
+    <AssemblyName Condition="'$(Loader)' == 'BepInEx6'">PortableMusicPlayer</AssemblyName>
+    <RootNamespace>PortableMusicPlayer</RootNamespace>
+    <FrameworkDll5 Condition="'$(FrameworkDll5)' == ''">$(GamePath)\BepInEx\plugins\ObenseuerCore\ObenseuerCore.BepInEx5.dll</FrameworkDll5>
+    <FrameworkDll6 Condition="'$(FrameworkDll6)' == ''">$(MSBuildThisFileDirectory).local\dependencies\ObenseuerCore\ObenseuerCore.dll</FrameworkDll6>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="NLayer" Version="1.16.0" />
+    <Compile Include="src\**\*.cs" />
+    <Reference Include="ObenseuerCore" Condition="'$(Loader)' == 'BepInEx5'"><HintPath>$(FrameworkDll5)</HintPath><Private>false</Private></Reference>
+    <Reference Include="ObenseuerCore" Condition="'$(Loader)' == 'BepInEx6'"><HintPath>$(FrameworkDll6)</HintPath><Private>false</Private></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>$(GameManagedPath)\Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(GameManagedPath)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameManagedPath)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AudioModule"><HintPath>$(GameManagedPath)\UnityEngine.AudioModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(GameManagedPath)\UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(GameManagedPath)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(GameManagedPath)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(GameManagedPath)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Loader)' == 'BepInEx5'">
+    <Reference Include="BepInEx"><HintPath>$(BepInExCorePath)\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepInExCorePath)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Loader)' == 'BepInEx6'">
+    <Reference Include="BepInEx.Core"><HintPath>$(BepInEx6CorePath)\BepInEx.Core.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx.Unity.Mono"><HintPath>$(BepInEx6CorePath)\BepInEx.Unity.Mono.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepInEx6CorePath)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="assets" />
+  </ItemGroup>
+  <Target Name="CheckExternalReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(GamePath)' == '' Or !Exists('$(GameManagedPath)\Assembly-CSharp.dll')" Text="GamePath must point to an Obenseuer installation. Pass -GamePath or create .local/LocalPaths.props." />
+    <Error Condition="'$(Loader)' != 'BepInEx5' And '$(Loader)' != 'BepInEx6'" Text="Loader must be BepInEx5 or BepInEx6." />
+    <Error Condition="'$(Loader)' == 'BepInEx5' And !Exists('$(FrameworkDll5)')" Text="FrameworkDll5 must point to ObenseuerCore.BepInEx5.dll from the Obenseuer Modding Framework release." />
+    <Error Condition="'$(Loader)' == 'BepInEx5' And !Exists('$(BepInExCorePath)\BepInEx.dll')" Text="BepInExCorePath must contain BepInEx.dll." />
+    <Error Condition="'$(Loader)' == 'BepInEx5' And !Exists('$(BepInExCorePath)\0Harmony.dll')" Text="BepInExCorePath must contain 0Harmony.dll." />
+    <Error Condition="'$(Loader)' == 'BepInEx6' And !Exists('$(FrameworkDll6)')" Text="FrameworkDll6 must point to ObenseuerCore.dll from the Obenseuer Modding Framework release." />
+    <Error Condition="'$(Loader)' == 'BepInEx6' And !Exists('$(BepInEx6CorePath)\BepInEx.Core.dll')" Text="BepInEx6CorePath must contain BepInEx.Core.dll." />
+    <Error Condition="'$(Loader)' == 'BepInEx6' And !Exists('$(BepInEx6CorePath)\BepInEx.Unity.Mono.dll')" Text="BepInEx6CorePath must contain BepInEx.Unity.Mono.dll." />
+    <Error Condition="'$(Loader)' == 'BepInEx6' And !Exists('$(BepInEx6CorePath)\0Harmony.dll')" Text="BepInEx6CorePath must contain 0Harmony.dll." />
+  </Target>
+</Project>

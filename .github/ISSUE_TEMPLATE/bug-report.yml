@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a reproducible Portable Music Player problem
+title: ""
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a problem. Check logs for usernames and local paths before attaching them.
+  - type: input
+    id: mod-version
+    attributes:
+      label: Mod version
+      placeholder: 0.2.4
+    validations:
+      required: true
+  - type: input
+    id: game-version
+    attributes:
+      label: Obenseuer version
+    validations:
+      required: true
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Mod loader
+      options:
+        - BepInEx 5
+        - BepInEx 6 Unity Mono
+    validations:
+      required: true
+  - type: input
+    id: framework-version
+    attributes:
+      label: Obenseuer Modding Framework version
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe what you expected and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: Attach or paste the relevant parts of BepInEx/LogOutput.log and the Portable Music Player log after removing private information.
+  - type: textarea
+    id: mods
+    attributes:
+      label: Other installed mods
+      description: List other mods that could affect inventory, input, UI, audio or radio behavior.

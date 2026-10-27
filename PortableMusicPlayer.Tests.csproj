@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>PortableMusicPlayer.Tests</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <!-- Unity's netstandard 2.1 references would redirect NLayer's netstandard 2.0 to a version .NET Framework lacks. -->
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NLayer" Version="1.16.0" />
+    <ProjectReference Include="PortableMusicPlayer.csproj" ReferenceOutputAssembly="false" />
+    <Compile Include="tests\**\*.cs" />
+    <!-- Unity-free rules and the decoder/library code are compiled straight into the tests. -->
+    <Compile Include="src\Core\**\*.cs" LinkBase="Core" />
+    <Compile Include="src\Audio\**\*.cs" LinkBase="Audio" />
+    <Compile Include="src\Library\**\*.cs" LinkBase="Library" />
+    <Compile Remove="src\Library\GameRadioLibrary.cs" />
+    <Compile Remove="src\Library\ObentunesLibrary.cs" />
+    <None Include="tests\fixtures\*" Link="fixtures\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Compile-time only: the tests never call into Unity. -->
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(GameManagedPath)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AudioModule"><HintPath>$(GameManagedPath)\UnityEngine.AudioModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Mono.Cecil"><HintPath>$(BepInExCorePath)\Mono.Cecil.dll</HintPath><Private>true</Private></Reference>
+  </ItemGroup>
+  <Target Name="CheckTestReferences" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(GamePath)' == '' Or !Exists('$(GameManagedPath)\Assembly-CSharp.dll')" Text="GamePath must point to an Obenseuer installation." />
+    <Error Condition="!Exists('$(BepInExCorePath)\Mono.Cecil.dll')" Text="BepInExCorePath must contain Mono.Cecil.dll." />
+  </Target>
+</Project>

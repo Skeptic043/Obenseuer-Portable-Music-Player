@@ -1,0 +1,22 @@
+<Project>
+  <Import Project="$(MSBuildThisFileDirectory).local\LocalPaths.props" Condition="Exists('$(MSBuildThisFileDirectory).local\LocalPaths.props')" />
+  <PropertyGroup>
+    <Loader Condition="'$(Loader)' == ''">BepInEx5</Loader>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GameManagedPath>$(GamePath)\Obenseuer_Data\Managed</GameManagedPath>
+    <BepInExCorePath Condition="'$(BepInExCorePath)' == ''">$(MSBuildThisFileDirectory).local\dependencies\BepInEx5\BepInEx\core</BepInExCorePath>
+    <DefineConstants Condition="'$(Loader)' == 'BepInEx5'">$(DefineConstants);BEPINEX5</DefineConstants>
+    <DefineConstants Condition="'$(Loader)' == 'BepInEx6'">$(DefineConstants);BEPINEX6</DefineConstants>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory).local\obj\$(MSBuildProjectName)\$(Loader)\</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory).local\bin\$(MSBuildProjectName)\$(Loader)\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Deterministic>true</Deterministic>
+    <PathMap>$(MSBuildThisFileDirectory)=/PortableMusicPlayer/</PathMap>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NuGetAudit>false</NuGetAudit>
+  </PropertyGroup>
+</Project>
