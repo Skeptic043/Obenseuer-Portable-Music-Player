@@ -38,6 +38,8 @@ namespace PortableMusicPlayer.Playback
         private bool advanced;
         private string additionalFolders;
         private Device? lastHeadphones;
+        // Loads and saves empty and refill the head slot, so while one runs this keeps its value from before.
+        private bool headphonesWorn;
         private string playbackNotice;
         private LibrarySnapshot library = LibrarySnapshot.Empty;
 
@@ -85,8 +87,12 @@ namespace PortableMusicPlayer.Playback
             bool loading = SaveController.Loading || SaveData.Busy;
             Device? worn = WornHeadphones();
             if (worn != null) lastHeadphones = worn;
-            headphoneAbsence.Observe(worn != null, Time.unscaledTime);
             if (loading) headphoneAbsence.Reset();
+            else
+            {
+                headphoneAbsence.Observe(worn != null, Time.unscaledTime);
+                headphonesWorn = !headphoneAbsence.Lost(Time.unscaledTime) && lastHeadphones != null;
+            }
             if (Time.unscaledTime >= scanAt)
             {
                 scanAt = Time.unscaledTime + ScanInterval;
@@ -139,7 +145,7 @@ namespace PortableMusicPlayer.Playback
             {
                 Powered = state.Powered,
                 Carried = active.Present,
-                HeadphonesWorn = !headphoneAbsence.Lost(Time.unscaledTime) && lastHeadphones != null,
+                HeadphonesWorn = headphonesWorn,
                 HasCharge = active.HasCharge,
                 Paused = state.Paused,
                 // Not GameIsPaused: autosaves set that for several frames.
@@ -334,6 +340,8 @@ namespace PortableMusicPlayer.Playback
             output.Stop();
             window.Close();
             state = saved ?? new SavedState();
+            // The other save's headphones are not this one's.
+            headphonesWorn = false;
             playbackNotice = null;
             state.Normalize();
             if (state.Powered) active.Expect(state.PlayerId);

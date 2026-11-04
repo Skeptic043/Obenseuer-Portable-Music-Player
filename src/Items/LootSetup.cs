@@ -5,7 +5,8 @@ namespace PortableMusicPlayer.Items
 {
     internal static class LootSetup
     {
-        // The framework keeps these entries and reapplies them after every rebuild of the game's pools.
+        // The framework keeps these entries and reapplies them after every rebuild of the game's pools,
+        // and tops up trader stock whenever a save loads or the trader restocks.
         internal static void Apply(string modId, CoreLog log)
         {
             foreach (LootPlacement placement in LootPlan.All)
@@ -18,6 +19,12 @@ namespace PortableMusicPlayer.Items
                 LootTier tier = placement.List == LootList.Rare ? LootTier.Rare : LootTier.Common;
                 if (!LootPools.Add(modId, placement.Category, id, 1, tier))
                     log.Warn(Catalog.Entry(placement.Device).Title + " was not added to " + placement.Category + ".");
+            }
+            foreach ((Device device, string shop) in LootPlan.AlwaysStocked)
+            {
+                ItemSetup.TryIdOf(device, out int id);
+                if (!ShopStock.AddTraderStock(modId, shop, id, 1))
+                    log.Warn(Catalog.Entry(device).Title + " was not added to the " + shop + "'s stock.");
             }
         }
     }

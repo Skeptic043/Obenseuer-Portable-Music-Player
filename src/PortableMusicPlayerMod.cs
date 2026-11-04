@@ -70,6 +70,7 @@ namespace PortableMusicPlayer
                 log.Info(MediaFoundationSupport.Summary + ".");
 
                 LootSetup.Apply(mod.Id, log);
+                ShopBuyers.Install();
                 GamePatches.Apply(mod, log);
 
                 player = new MusicPlayer(settings, log);
@@ -83,6 +84,7 @@ namespace PortableMusicPlayer
             {
                 ItemRegistry.Loaded -= RefreshItems;
                 player?.Dispose();
+                ShopBuyers.Remove();
                 GamePatches.Remove();
                 Player = null;
                 initialized = false;
@@ -109,6 +111,7 @@ namespace PortableMusicPlayer
         {
             ItemRegistry.Loaded -= FinishLoad;
             ItemRegistry.Loaded -= RefreshItems;
+            ShopBuyers.Remove();
             GamePatches.Remove();
             Player?.Dispose();
             Player = null;

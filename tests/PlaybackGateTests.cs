@@ -80,14 +80,22 @@ namespace PortableMusicPlayer.Tests
             Assert.Equal(BatteryUse.Silent, decision.Battery, "battery use while paused");
         }
 
-        public static void HeadphonesStillBeingRestoredByALoadDoNotPauseTheSong()
+        public static void NoHeadphonesStaysQuietThroughALoad()
         {
-            // The game puts worn items back a moment after a load.
             PlaybackConditions conditions = Listening();
             conditions.HeadphonesWorn = false;
             conditions.Loading = true;
             conditions.PlayThroughLoading = true;
-            Assert.Equal(PlaybackOutput.Play, PlaybackGate.Decide(conditions).Output, "output while a load restores the head slot");
+            Assert.Equal(PlaybackOutput.Hold, PlaybackGate.Decide(conditions).Output, "output while loading without headphones");
+        }
+
+        public static void ASaveWhileSleepingFollowsThePassingTimeSetting()
+        {
+            PlaybackConditions conditions = Listening();
+            conditions.PassingTime = true;
+            conditions.Loading = true;
+            conditions.PlayThroughLoading = true;
+            Assert.Equal(PlaybackOutput.Hold, PlaybackGate.Decide(conditions).Output, "output during a save while sleeping");
         }
 
         public static void ThePauseMenuHoldsTheSong()

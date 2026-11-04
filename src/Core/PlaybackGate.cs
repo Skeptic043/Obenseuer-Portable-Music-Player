@@ -49,10 +49,11 @@ namespace PortableMusicPlayer.Core
             // The inventory is rebuilt while a save or level loads, so absence then is not a drop.
             if (!c.Carried && !c.Loading) return Off;
             if (c.Paused || c.MenuOpen) return Hold;
-            // A load puts worn items back a moment late, so missing headphones then are not taken off.
-            if (!c.HeadphonesWorn && !c.Loading) return Hold;
-            if (c.Loading) return c.PlayThroughLoading ? new PlaybackDecision(PlaybackOutput.Play, BatteryUse.Playing) : Hold;
+            // During a load or save, HeadphonesWorn is what it was before it began.
+            if (!c.HeadphonesWorn) return Hold;
+            // Before loading, so a save made while sleeping follows the passing-time setting.
             if (c.PassingTime) return c.PlayWhilePassingTime ? new PlaybackDecision(PlaybackOutput.Play, BatteryUse.PlayingPassingTime) : Hold;
+            if (c.Loading) return c.PlayThroughLoading ? new PlaybackDecision(PlaybackOutput.Play, BatteryUse.Playing) : Hold;
             return new PlaybackDecision(PlaybackOutput.Play, BatteryUse.Playing);
         }
     }

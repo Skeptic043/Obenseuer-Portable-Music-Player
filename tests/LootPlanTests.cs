@@ -40,8 +40,15 @@ namespace PortableMusicPlayer.Tests
             foreach (CatalogEntry entry in Catalog.All)
             {
                 Assert.True(LootPlan.All.Any(p => p.Device == entry.Device && !p.Shop), entry.Device + " is never found in containers");
-                Assert.True(LootPlan.All.Any(p => p.Device == entry.Device && p.Shop), entry.Device + " is never sold");
+                Assert.True(LootPlan.AlwaysStocked.Any(s => s.Device == entry.Device) ||
+                    LootPlan.All.Any(p => p.Device == entry.Device && p.Shop), entry.Device + " is never sold");
             }
+        }
+
+        public static void ThePawnShopNeverStocksPlayers()
+        {
+            Assert.True(!LootPlan.All.Any(p => Catalog.Entry(p.Device).IsPlayer && p.Category == LootPlan.PawnShopCategory),
+                "the Pawn Shop stocks a music player");
         }
 
         private static Dictionary<string, JObject> GameCategories()
