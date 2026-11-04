@@ -2,14 +2,18 @@
 
 ## Version 0.2.6
 
-- Music no longer plays during load screens or saves, such as when sleeping, unless you were wearing headphones
-- The Pawn Shop and One stop shop buy all music players and headphones
-- Budget Earbuds are always for sale at the One stop shop
+### Added
 
-## Version 0.2.5
+- The Pawn Shop and One stop shop buy music players and headphones
 
-- Both music players are always for sale at the One stop shop and the General Trader, and come back after the shop restocks
-- The Pawn Shop buys music players
+### Fixed
+
+- Music no longer plays during load screens or saves when not wearing headphones
+- The One stop shop always stocks 1 Budget Earbuds and 1 of each Portable Music Player for sale instead of rarely or never having them
+- The General Trader always stocks 1 of each Portable Music Player for sale instead of rarely or never having them
+
+### Changed
+
 - Removed shop entries for traders that don't exist in the game
 
 ## Version 0.2.4
